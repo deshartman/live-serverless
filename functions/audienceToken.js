@@ -1,73 +1,58 @@
 /**
- * Get an Access Token for an audience member
+ * Start a new livestream with a Video Room, PlayerStreamer, and MediaProcessor
  */
+exports.handler = async function (context, event, callback) {
+    console.log(`start event: ${JSON.stringify(event, null, 4)}`);
 
-const crypto = require('crypto');
-const AccessToken = require('twilio').jwt.AccessToken;
-const PlaybackGrant = AccessToken.PlaybackGrant;
-
-exports.handler = function (context, event, callback) {
-    console.log(`event: ${JSON.stringify(event, null, 4)}`);
-
-    // Build a mapping of headers
-    const headers = {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST,OPTIONS",
-        "Content-Type": "application/json",
-    };
-
-    // Set headers in response
-    response.setHeaders(headers);
+    // function sendResponse(data) {
+    //     const response = new Twilio.Response();
+    //     response.appendHeader("Access-Control-Allow-Origin", "*");
+    //     response.appendHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
+    //     response.appendHeader("Content-Type", "application/json");
+    //     response.setBody(data);
+    //     return response;
+    // }
 
     const twilioClient = context.getTwilioClient();
-
-    // Generate a random string for the identity
-    const identity = crypto.randomBytes(20).toString('hex');
-
-    // Get the user's identity and the room name from the request
-    const identity = event.identity;
-    const roomName = event.room;
+    const streamName = event.streamName;
 
     try {
-        // Get the first player streamer
-        const playerStreamerList = await twilioClient.media.playerStreamer.list({ status: 'started' });
-        const playerStreamer = playerStreamerList.length ? playerStreamerList[0] : null;
+        // Create the WebRTC Go video room, PlayerStreamer, and MediaProcessors
+        const room = await twilioClient.video.rooms.create({
+            uniqueName: streamName,
+            type: 'go'
+        });
 
-        // If no one is streaming, return a message
-        if (playerStreamer) {
-            // Otherwise create an access token with a PlaybackGrant for the livestream
-            const token = new AccessToken(context.ACCOUNT_SID, CONTEXT.API_KEY, context.API_SECRET);
+        console.log(`>>>>>> 1`);
 
-            // Create a playback grant and attach it to the access token
-            const playbackGrant = await twilioClient.media.playerStreamer(playerStreamer.sid).playbackGrant().create({ ttl: 60 });
+        const playerStreamer = await twilioClient.media.playerStreamer.create();
 
-            const wrappedPlaybackGrant = new PlaybackGrant({
-                grant: playbackGrant.grant
-            });
-
-            token.addGrant(wrappedPlaybackGrant);
-            token.identity = identity;
-
-            // Serialize the token to a JWT and return it to the client side
-            callback(null, response({
-                token: token.toJwt()
-            }));
-
-        } else {
-            callback(null, {
-                message: `No one is streaming right now`,
+        console.log(`>>>>>> 2`);
+        const mediaProcessor = await twilioClient.media.mediaProcessor.create({
+            extension: 'video-composer-v1',
+            extensionContext: JSON.stringify({
+                identity: 'video-composer-v1',
+                room: {
+                    name: room.sid
+                },
+                outputs: [
+                    playerStreamer.sid
+                ],
             })
-        }
+        });
+
+        console.log(`>>>>>> 1`);
+
+        callback(null,
+            //sendResponse({
+            {
+                roomId: room.sid,
+                streamName: streamName,
+                playerStreamerId: playerStreamer.sid,
+                mediaProcessorId: mediaProcessor.sid
+            });
     } catch (error) {
         callback(error, null);
     }
 
 };
-
-
-
-
-
-
-
-

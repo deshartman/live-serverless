@@ -40,7 +40,7 @@ const startStream = async (streamName, identity) => {
     const tokenResponse = await fetch('/streamerToken', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: JSON.stringify({
             'identity': identity,
@@ -68,7 +68,7 @@ const endStream = async () => {
             const response = await fetch('/end', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: JSON.stringify({
                     streamDetails: streamDetails
@@ -125,5 +125,5 @@ startEndButton.addEventListener('click', startOrEndStream);
 window.addEventListener('beforeunload', async (event) => {
     event.preventDefault();
     await endStream();
-    e.returnValue = '';
+    event.returnValue = '';
 });

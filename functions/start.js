@@ -1,17 +1,17 @@
 /**
  * Start a new livestream with a Video Room, PlayerStreamer, and MediaProcessor
  */
-exports.handler = function (context, event, callback) {
+exports.handler = async function (context, event, callback) {
     console.log(`start event: ${JSON.stringify(event, null, 4)}`);
 
-    function sendResponse(data) {
-        const response = new Twilio.Response();
-        response.appendHeader("Access-Control-Allow-Origin", "*");
-        response.appendHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
-        response.appendHeader("Content-Type", "application/json");
-        response.setBody(data);
-        return response;
-    }
+    // function sendResponse(data) {
+    //     const response = new Twilio.Response();
+    //     response.appendHeader("Access-Control-Allow-Origin", "*");
+    //     response.appendHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
+    //     response.appendHeader("Content-Type", "application/json");
+    //     response.setBody(data);
+    //     return response;
+    // }
 
     const twilioClient = context.getTwilioClient();
     const streamName = event.streamName;
@@ -43,12 +43,14 @@ exports.handler = function (context, event, callback) {
 
         console.log(`>>>>>> 1`);
 
-        callback(null, sendResponse({
-            roomId: room.sid,
-            streamName: streamName,
-            playerStreamerId: playerStreamer.sid,
-            mediaProcessorId: mediaProcessor.sid
-        }));
+        callback(null,
+            //sendResponse({
+            {
+                roomId: room.sid,
+                streamName: streamName,
+                playerStreamerId: playerStreamer.sid,
+                mediaProcessorId: mediaProcessor.sid
+            });
     } catch (error) {
         callback(error, null);
     }
