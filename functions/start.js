@@ -23,9 +23,7 @@ exports.handler = async function (context, event, callback) {
             type: 'go'
         });
 
-        console.log(`>>>>>> 1`);
         const playerStreamer = await twilioClient.media.playerStreamer.create();
-        console.log(`>>>>>> 2`);
         const mediaProcessor = await twilioClient.media.mediaProcessor.create({
             extension: 'video-composer-v1',
             extensionContext: JSON.stringify({
@@ -38,7 +36,6 @@ exports.handler = async function (context, event, callback) {
                 ],
             })
         });
-        console.log(`>>>>>> 3`);
         callback(null,
             //sendResponse({
             {

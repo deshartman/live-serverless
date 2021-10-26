@@ -20,14 +20,9 @@ exports.handler = async function (context, event, callback) {
     console.log(`Streamer Token Event Identity: ${event.identity}`);
     console.log(`Streamer Token Event Room: ${event.room}`);
 
-    console.log(`>>>>>> A`);
-
-
     if (!event.identity || !event.room) {
         callback(null, sendResponse({ message: `Missing identity and/or stream name` }));
     }
-
-    console.log(`>>>>>> 1`);
 
     // Get the user's identity and the room name from the request
     const identity = event.identity;
@@ -38,20 +33,15 @@ exports.handler = async function (context, event, callback) {
         const videoGrant = new VideoGrant({
             room: roomName,
         });
-        console.log(`>>>>>> 2`);
 
         // Create an access token
         const token = new AccessToken(context.ACCOUNT_SID, context.API_KEY, context.API_SECRET);
-
-        console.log(`>>>>>> 3`);
 
         // Add the video grant and the user's identity to the token
         token.addGrant(videoGrant);
         token.identity = identity;
 
-        console.log(`>>>>>> 4`);
         // Serialize the token to a JWT and return it to the client side
-
         callback(null, {
             token: token.toJwt()
         });
