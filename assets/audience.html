@@ -5,6 +5,20 @@
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!-- Segment component -->
+        <script src="https://assets.flex.twilio.com/releases/flex-webchat-ui/2.9.1/twilio-flex-webchat.min.js"
+            integrity="sha512-yBmOHVWuWT6HOjfgPYkFe70bboby/BTj9TGHXTlEatWnYkW5fFezXqW9ZgNtuRUqHWrzNXVsqu6cKm3Y04kHMA=="
+            crossorigin></script>
+        <script>
+            !function () {
+                var analytics = window.analytics = window.analytics || []; if (!analytics.initialize) if (analytics.invoked) window.console && console.error && console.error("Segment snippet included twice."); else {
+                    analytics.invoked = !0; analytics.methods = ["trackSubmit", "trackClick", "trackLink", "trackForm", "pageview", "identify", "reset", "group", "track", "ready", "alias", "debug", "page", "once", "off", "on", "addSourceMiddleware", "addIntegrationMiddleware", "setAnonymousId", "addDestinationMiddleware"]; analytics.factory = function (e) { return function () { var t = Array.prototype.slice.call(arguments); t.unshift(e); analytics.push(t); return analytics } }; for (var e = 0; e < analytics.methods.length; e++) { var key = analytics.methods[e]; analytics[key] = analytics.factory(key) } analytics.load = function (key, e) { var t = document.createElement("script"); t.type = "text/javascript"; t.async = !0; t.src = "https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js"; var n = document.getElementsByTagName("script")[0]; n.parentNode.insertBefore(t, n); analytics._loadOptions = e }; analytics._writeKey = "JO4nkXzvfpEshRGWcfm4M9rNRmA9bCId";; analytics.SNIPPET_VERSION = "4.15.3";
+                    analytics.load("JO4nkXzvfpEshRGWcfm4M9rNRmA9bCId");
+                    analytics.page();
+                }
+            }();
+        </script>
+        <!-- end Segment component -->
     <title>Livestream Demo | Audience</title>
     <link href='https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css' rel='stylesheet'>
     <script defer src='../livePlayer/twilio-live-player.min.js'></script>
@@ -18,11 +32,42 @@
         </div>
 
         <button class='bg-green-500 hover:bg-green-700 text-white font-bold mt-10 py-2 px-6 mr-2 rounded'
-            id='streamStartEnd'>
+            id='streamStartEnd'
+            onclick="joinLivestream()">
             watch stream
         </button>
 
     </div>
+
+    <!-- Segment component -->
+    <script>
+        const appConfig = {
+            accountSid: "AC42b7681dfe745ef1302752a7493f4985",
+            flexFlowSid: "FO40b4e0e15149cd16309787beed78682e"
+        };
+        Twilio.FlexWebChat.renderWebChat(appConfig);
+    </script>
+
+    <script>
+        analytics.identify('00Q2w00000AKPG7EAP', {
+            name: 'Wanda Maximoff',
+            email: 'kristianslamet@gmail.com',
+            phoneNumber: '+6592396026'
+        });
+        function joinLivestream() {
+            analytics.track('join_livestream', {
+                Id: '00Q2w00000AKPG7EAP',
+                joined_livestream: true,
+                Status: 'Completed',
+                Subject: 'Joined livestream',
+                WhoId: '00Q2w00000AKPG7EAP',
+                OwnerId: '0052w000006T7hsAAC',
+                phoneNumber: '+6592396026'
+            });
+            alert("Joining livestream!");
+        }
+    </script>
+    <!-- end Segment component -->
 </body>
 
 </html>
