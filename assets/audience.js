@@ -24,6 +24,8 @@ const watchStream = async () => {
         player.play();
         streamPlayer.appendChild(player.videoElement);
 
+
+
         watchingStream = true;
         startEndButton.innerHTML = 'leave stream';
         startEndButton.classList.replace('bg-green-500', 'bg-red-500');
