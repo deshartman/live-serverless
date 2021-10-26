@@ -2,16 +2,16 @@
  * Start a new livestream with a Video Room, PlayerStreamer, and MediaProcessor
  */
 exports.handler = async function (context, event, callback) {
-    console.log(`event: ${JSON.stringify(event, null, 4)}`);
+    console.log(`End event: ${JSON.stringify(event, null, 4)}`);
 
-    function sendResponse(data) {
-        const response = new Twilio.Response();
-        response.appendHeader("Access-Control-Allow-Origin", "*");
-        response.appendHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
-        response.appendHeader("Content-Type", "application/x-www-form-urlencoded");
-        response.setBody(data);
-        return response;
-    }
+    // function sendResponse(data) {
+    //     const response = new Twilio.Response();
+    //     response.appendHeader("Access-Control-Allow-Origin", "*");
+    //     response.appendHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
+    //     response.appendHeader("Content-Type", "application/x-www-form-urlencoded");
+    //     response.setBody(data);
+    //     return response;
+    // }
 
     const twilioClient = context.getTwilioClient();
 
@@ -27,9 +27,9 @@ exports.handler = async function (context, event, callback) {
         await twilioClient.media.playerStreamer(playerStreamerId).update({ status: 'ended' });
         await twilioClient.video.rooms(roomId).update({ status: 'completed' });
 
-        callback(null, sendResponse({
+        callback(null, {
             message: `Successfully ended stream ${streamName}`
-        }));
+        });
     } catch (error) {
         callback(error, null);
     }

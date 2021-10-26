@@ -20,6 +20,8 @@ const watchStream = async () => {
             return;
         }
 
+        console.log(`===>>>> got here: 1`);
+
         player = await Twilio.Live.Player.connect(data.token, { playerWasmAssetsPath: '../livePlayer' });
         player.play();
         streamPlayer.appendChild(player.videoElement);
